@@ -40,4 +40,9 @@ module RallyUtils
     subscription_id = create_subscription(cookie, config[:username], config[:modules])
     switch_toggles(cookie, subscription_id, config[:toggles])
   end
+
+  def self.prompt_for_artifact_id
+    puts "Enter an artifact id:"
+    return gets
+  end
 end
