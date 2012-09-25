@@ -1,7 +1,3 @@
-// ==UserScript==
-// @match https://rally1.rallydev.com/*
-// ==/UserScript==
-
 var addJQuery = function (callback) {
     var script = document.createElement("script");
     script.setAttribute("src", "https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js");
@@ -18,7 +14,6 @@ window.hideBadRows = function () {
     me.removeBadFields = function (d, container_id) {
         var STORY_FIELDS_TO_HIDE = [
             "Tags",
-            "State",
             "Blocked",
             "Release",
             "Iteration",
@@ -83,7 +78,7 @@ window.hideBadRows = function () {
         $(d).find('#' + container_id + ' tr').each(function (index, row) {
             var shouldHide = false;
             var headers = $(row).find('th');
-            headers.each(function(i, header) {
+            headers.each(function (i, header) {
                 var $header = $(header);
                 var labelText = $header.text();
                 $(FIELDS_TO_HIDE).each(function (i, field) {
@@ -101,9 +96,12 @@ window.hideBadRows = function () {
     };
 
     me.filterKanbanStates = function (document) {
-
-
-
+        var VALID_VALUES = ['Ready', 'Building', 'Testing', 'Completed', 'Accepting', 'Merging', 'Released'];
+        $kanbanStateSelect = $(document).find('#custom_attribute_442934705');
+        var optionsToHide = $kanbanStateSelect.find('option').filter(function (i) {
+            return $.inArray($(this).val(), VALID_VALUES) === -1;
+        });
+        optionsToHide.remove();
     };
 
     $(document).ready(function () {
@@ -116,5 +114,4 @@ window.hideBadRows = function () {
         });
     });
 };
-
 addJQuery(hideBadRows);
