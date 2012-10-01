@@ -1,4 +1,6 @@
 require 'net/http'
+require 'json'
+
 module RallyUtils
   def self.post(url, cookie, form_hash)
     uri = URI(url)
@@ -10,6 +12,16 @@ module RallyUtils
       http.request(req)
     end
     res
+  end
+
+  def self.get_wsapi(url, username, password)
+    uri = URI(url)
+    req = Net::HTTP::Get.new(uri.request_uri)
+    req.basic_auth username, password
+    res = Net::HTTP.start(uri.host, uri.port) {|http|
+      http.request(req)
+    }
+   res.body
   end
 
   def self.login(username, password)
@@ -24,9 +36,11 @@ module RallyUtils
   end
 
   def self.switch_toggles(cookie, subscription_id, toggles)
-    toggles.each do |toggle|
-      form_string = {'value' => 'true', 'subscriptionID' => subscription_id, '_slug' => '/admin/togglefeatures', 'cpoid' => '1', 'projectScopeUp' => 'false', 'projectScopeDown' => 'true', 'name' => toggle}
-      post('http://localhost:7001/slm/admin/tools/setSubscriptionToggle.sp', cookie, form_string)
+    if toggles
+      toggles.each do |toggle|
+        form_string = {'value' => 'true', 'subscriptionID' => subscription_id, '_slug' => '/admin/togglefeatures', 'cpoid' => '1', 'projectScopeUp' => 'false', 'projectScopeDown' => 'true', 'name' => toggle}
+        post('http://localhost:7001/slm/admin/tools/setSubscriptionToggle.sp', cookie, form_string)
+      end
     end
   end
 
@@ -45,4 +59,11 @@ module RallyUtils
     puts "Enter an artifact id:"
     return gets
   end
+
+  def self.get_artifact_name(username, password, artifact_id)
+    url = "http://localhost:7001/slm/webservice/1.37/artifact.js?query=(FormattedID%20=%20#{artifact_id})&fetch=true"
+    json = get_wsapi(url, username, password)
+    JSON.parse(json)["QueryResult"]["Results"].first["Name"]
+  end
+
 end
