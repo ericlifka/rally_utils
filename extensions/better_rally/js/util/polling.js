@@ -1,7 +1,7 @@
 (function () {
     var DEFAULT_POLL_INTERVAL = 2000;
 
-    var waitForElementsAndExecute = function (selectors, command, d) {
+    var waitForElementsAndExecute = function (selectors, command, d, interval) {
         d = d || document;
         var pollingId = setInterval(function () {
             var shouldExecute = true;
@@ -17,7 +17,7 @@
                     clearInterval(pollingId);
                 }
             }
-        }, DEFAULT_POLL_INTERVAL);
+        }, interval || DEFAULT_POLL_INTERVAL);
     };
 
     var pollForever = function (command, interval) {
@@ -25,7 +25,7 @@
         setInterval(command, interval || DEFAULT_POLL_INTERVAL);
     };
 
-    var waitForIframeElementsAndExecute = function (selectors, command) {
+    var waitForIframeElementsAndExecute = function (selectors, command, interval) {
         waitForElementsAndExecute(['iframe.rally-html'], function () {
                 var iframe_document = $('iframe.rally-html')[0].contentDocument;
                 var shouldExecute = true;
@@ -38,7 +38,8 @@
                     command(iframe_document);
                 }
                 return false;
-            }
+            },
+            interval
         );
     };
 

@@ -39,6 +39,7 @@
         "js/kanban/remove_unnecessary_filters.js",
         "js/kanban/add_policy_fields_to_cards.js",
         "js/kanban/add_overclaimed_indicator.js",
+        "js/kanban/auto_ready_when_pushed_and_green_in_merging.js",
         "js/navigation/trim_navigation_menu.js"
     ],
     "browser_action":{

@@ -49,6 +49,7 @@
             _buildData[buildDefinitionName]['lastBuildObjectID'] = buildDefinition.get('LastBuild').ObjectID;
             _fetchBuildData(_buildData[buildDefinitionName]['lastBuildObjectID'], function (buildModel) {
                 _buildData[buildDefinitionName]['lastBuildNumber'] = buildModel.get('Number');
+                _buildData[buildDefinitionName]['lastBuildStart'] = buildModel.get('Start');
             });
         });
     };
